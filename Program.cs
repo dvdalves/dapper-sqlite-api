@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Adiciona a conexão com o banco de dados SQLite
+// Register Dapper
 builder.Services.AddTransient<IDbConnection>(db => new SQLiteConnection(builder.Configuration.GetConnectionString("SQLiteConnection")));
 
 var app = builder.Build();
@@ -30,7 +30,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Obtenha o serviço Context do contêiner e chame EnsureTablesCreated
+// Ensure the database tables are created
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

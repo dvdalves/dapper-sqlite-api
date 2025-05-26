@@ -6,14 +6,8 @@ namespace CRUD_DapperSqlite.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductController : ControllerBase
+public class ProductController(Context context) : ControllerBase
 {
-    private readonly Context _context;
-
-    public ProductController(Context context)
-    {
-        _context = context;
-    }
 
     /// <summary>
     /// Retrieve all products.
@@ -23,7 +17,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var products = await _context.GetProductsAsync();
+            var products = await context.GetProductsAsync();
             return Ok(products);
         }
         catch (Exception ex)
@@ -41,7 +35,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var product = await _context.GetProductByIdAsync(id);
+            var product = await context.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound($"Product with ID {id} not found.");
@@ -63,7 +57,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var newProduct = await _context.CreateProductAsync(product);
+            var newProduct = await context.CreateProductAsync(product);
             return CreatedAtAction(nameof(GetProduct), new { id = newProduct.Id }, newProduct);
         }
         catch (Exception ex)
@@ -87,7 +81,7 @@ public class ProductController : ControllerBase
                 return BadRequest("Provided product ID does not match the ID of the product to be updated.");
             }
 
-            await _context.UpdateProductAsync(product);
+            await context.UpdateProductAsync(product);
             return NoContent();
         }
         catch (Exception ex)
@@ -105,13 +99,13 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var product = await _context.GetProductByIdAsync(id);
+            var product = await context.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound($"Product with ID {id} not found.");
             }
 
-            await _context.DeleteProductAsync(id);
+            await context.DeleteProductAsync(id);
             return NoContent();
         }
         catch (Exception ex)
